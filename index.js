@@ -13,7 +13,7 @@ app.use(express.json())
 
 
 
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.aebmoeb.mongodb.net/?retryWrites=true&w=majority`;
 console.log(uri)
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
@@ -51,6 +51,24 @@ async function run() {
             const cursor = serviceCollection.find(query);
             const services = await cursor.toArray();
             res.send(services);
+        })
+
+
+        app.get('/services/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { service_id : id };
+            const service = await serviceCollection.findOne(query);
+            res.send(service);
+
+        })
+        const reviewCollection = client.db("tourist-app").collection("reviews");
+        app.get('/reviews/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = {service_id: id};
+            const cursor = reviewCollection.find(query);
+            const result = await cursor.toArray()
+            res.send(result)
+
         })
                     
     }
