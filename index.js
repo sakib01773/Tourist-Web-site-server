@@ -55,7 +55,7 @@ async function run() {
             res.send(result)
 
         })
-        
+
         app.get('/review', async (req, res) => {
             console.log(req.query)
             let query = {};
@@ -75,6 +75,13 @@ async function run() {
             const review = req.body;
             const result = await reviewCollection.insertOne(review);
             res.send(result);
+        })
+        // delet api
+        app.delete('/review/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await reviewCollection.deleteOne(query);
+            res.send(result)
         })
                     
     }
