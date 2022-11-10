@@ -17,23 +17,6 @@ const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.aebmoeb.mongodb.net/?retryWrites=true&w=majority`;
 console.log(uri)
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
-// async function run() {
-//     try {
-//         const userCollection = client.db("tourist-app").collection("services")
-
-//         app.get("/services", async (req, res) => {
-//             const quary = {}
-//             const cursor = userCollection.find(quary);
-//             const services = await cursor.toArray();
-//             res.send(services);
-//         })
-        
-//     }
-//     finally {
-        
-//     }
-// }
-// run().catch(err => console.log(err))
 
 
 async function run() {
@@ -61,6 +44,8 @@ async function run() {
             res.send(service);
 
         })
+
+
         const reviewCollection = client.db("tourist-app").collection("reviews");
         app.get('/reviews/:id', async (req, res) => {
             const id = req.params.id;
@@ -69,6 +54,14 @@ async function run() {
             const result = await cursor.toArray()
             res.send(result)
 
+        })
+
+        //review post 
+        app.post('/review', async (req, res) => {
+            // const id = req.params.id
+            const review = req.body;
+            const result = await reviewCollection.insertOne(review);
+            res.send(result);
         })
                     
     }
